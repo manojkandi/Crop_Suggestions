@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Prediction</title>
+</head>
+<body>
+    <h2>Crop Prediction</h2>
+    <form id="prediction-form">
+        <label for="N">Nitrogen (N):</label>
+        <input type="text" id="N" name="N"><br><br>
+        <label for="P">Phosphorus (P):</label>
+        <input type="text" id="P" name="P"><br><br>
+        <label for="K">Potassium (K):</label>
+        <input type="text" id="K" name="K"><br><br>
+        <label for="ph">pH:</label>
+        <input type="text" id="ph" name="ph"><br><br>
+        <input type="button" value="Predict" onclick="predictCrop()">
+    </form>
+    <h3>Prediction:</h3>
+    <p id="result"></p>
+    <script>
+        async function predictCrop() {
+            const N = parseFloat(document.getElementById('N').value);
+            const P = parseFloat(document.getElementById('P').value);
+            const K = parseFloat(document.getElementById('K').value);
+            const ph = parseFloat(document.getElementById('ph').value);
+
+            const response = await fetch('http://localhost:8000/predict/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ N, P, K, ph })
+            });
+            
+            const data = await response.json();
+            document.getElementById('result').textContent = `Suggested Crop: ${data.crop}`;
+        }
+    </script>
+</body>
+</html>
